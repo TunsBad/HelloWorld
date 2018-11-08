@@ -50,7 +50,8 @@ function saveNewCar(car, callback) {
     $.ajax({
         type: "POST",
         url: Api + 'api/cars/StoreCar',
-        data: JSON.stringify(car),
+        data: car,
+        contentType: "application/json",
         success: function (result) {
             //console.log("Response", result);
             callback();

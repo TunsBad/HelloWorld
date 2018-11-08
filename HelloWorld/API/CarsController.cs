@@ -16,10 +16,12 @@ namespace HelloWorld.API
     public class CarsController : Controller
     {
         private readonly IConfiguration _configuration;
+        private DbHelper helper;
 
         public CarsController(IConfiguration configuration)
         {
             _configuration = configuration;
+            helper = new DbHelper(_configuration) { };
         }
 
 
@@ -30,7 +32,7 @@ namespace HelloWorld.API
 
             try
             {
-                //cars = DbHelper.Instance.GetCars();
+                cars = helper.GetCars();
             }
             catch (Exception ex)
             {
@@ -48,7 +50,7 @@ namespace HelloWorld.API
 
             try
             {
-                //carInfo = DbHelper.Instance.GetCar(id);
+                carInfo = helper.GetCar(id);
             }
             catch (Exception ex)
             {
@@ -61,20 +63,16 @@ namespace HelloWorld.API
         [HttpPost("[action]")]
         public string StoreCar([FromBody] Car car)
         {
-            //Car carDetails = JsonConvert.DeserializeObject<Car>(car);
-
-            DbHelper helper = new DbHelper(_configuration) { };
 
             try
             {
-                var id = helper.StoreCar(car);
+                helper.StoreCar(car);
                 return "Car details has successfully been stored";
             }
             catch (Exception ex)
             {
                 Console.Write(ex);
-                var response = "An Error Occured";
-                return response;
+                return "An Error Occured";
             }
 
            
@@ -83,42 +81,35 @@ namespace HelloWorld.API
         [HttpPut("[action]")]
         public string UpdateCar([FromBody]Car car)
         {
-            var response = "";
 
             try
             {
-                //int id = DbHelper.Instance.UpdateCar(car);
-                //if (id > 0)
-                    return "Car details Has successfully Been Stored";
+                helper.UpdateCar(car);
+                return "Car details Has successfully Been Stored";
             }
             catch (Exception ex)
             {
                 Console.Write(ex);
-                response = "An Error Occured";
+                return "An Error Occured "+ ex;
             }
-
-            return response;
+           
         }
 
-        [HttpGet("[action]")]
+        [HttpDelete("[action]")]
         public string DeleteCar(int id)
         {
-            var response = "";
+
             try
             {
-                //int cardId = DbHelper.Instance.DeleteCar(id);
-                //if (id == cardId)
-                //{
-                //    return "The car has been removed";
-                //}
+                helper.DeleteCar(id);
+                return "The car has been removed";
             }
             catch (Exception ex)
             {
                 Console.Write(ex);
-                response = "An Error Occured";
+                return "An Error Occured " + ex;
             }
 
-            return response;
         }
     }
 }
